@@ -10,6 +10,10 @@ const app = express()
 app.get('/', function(req,res) {
   res.send('hhhhhh')
 })
+app.get('/data', function(req, res, next) {
+  res.json({key:1,username:"wyy"});
+  // res.send('respond with a resource');
+});
 
 app.listen(4000,function(){
   console.log('listening in 4000')
