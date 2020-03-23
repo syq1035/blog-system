@@ -9,8 +9,8 @@ import * as serviceWorker from './serviceWorker'
 import 'antd/dist/antd.css'
 import './assets/css/index.sass'
 import AppRouter from './routers'
-import reducers from './reducer'
-import './config'
+import reducers from './store/index'
+// import './config'
 // import App from './App';
 
 let storeEnhancers = compose(
