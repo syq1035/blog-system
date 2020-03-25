@@ -7,7 +7,6 @@ const REGISTER_FAILURE = 'REGISTER_FAILURE';
 const initState = {
   userInfo: {
     name: '',
-    password: '',
     phone: '',
     type: '',
     avatar: '',
@@ -16,8 +15,8 @@ const initState = {
     __v: 0,
     _id: '',
   },
-    message: '',
-   isAuth: false
+  message: '',
+  isAuth: false
 }
 
 export function user(state = initState, action) {
@@ -25,7 +24,9 @@ export function user(state = initState, action) {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        userInfo: action.payload
+        userInfo: action.payload.data,
+        message: action.payload.message,
+        isAuth: true
       }
     case REGISTER_SUCCESS:
       return {

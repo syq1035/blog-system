@@ -1,23 +1,118 @@
 import React from 'react'
-import { Input, Row, Col, Button  } from 'antd'
+import axios from 'axios'
+import { connect } from 'react-redux'
+import { Input, Row, Col, Button, Menu, Dropdown, message } from 'antd'
+import { CaretDownOutlined, UserOutlined, ExportOutlined } from '@ant-design/icons'
+import Register from './modals/register'
+import Login from './modals/login'
 
 const { Search } = Input;
 
-export default class Header extends React.Component {
+@connect(
+  state => state.user
+)
+class Header extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isLogin: false
+      registerModal: false,
+      loginModal: false,
+      userInfo: ''
     }
   }
-  handleRegister = () => {
-    this.props.showRegisterModal()
+
+  componentDidMount() {
+    this.getUserInfo()
   }
+
+  getUserInfo() {
+    axios.get('/user/info')
+      .then(res => {
+        if(res.status === 200 && res.data.code === 0){
+          this.setState({
+            userInfo: res.data.data
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  signOut() {
+    axios.post('/user/signout')
+      .then(res => {
+        if(res.status === 200 && res.data.code === 0){
+          this.setState({
+            userInfo: ''
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  showRegisterModal() {
+    this.setState({
+      ...this.state,
+      registerModal: true
+    })
+  }
+
+  closeRegisterModal() {
+    this.setState({
+      ...this.state,
+      registerModal: false
+    })
+  }
+
+  showLoginModal() {
+    this.setState({
+      ...this.state,
+      loginModal: true
+    })
+  }
+
+  closeLoginModal() {
+    this.setState({
+      ...this.state,
+      loginModal: false
+    })
+  }
+
+  handleRegister = () => {
+    this.showRegisterModal()
+  }
+
   handleLogin = () => {
-    this.props.showLoginModal()
+    this.showLoginModal()
+  }
+
+  handleMenuClick = ({key}) => {
+    console.log(key)
+    if(key === 'signout'){
+      this.signOut()
+    }
   }
 
   render() {
+    const menu = (
+      <Menu onClick={this.handleMenuClick}>
+        <Menu.Item key="0">
+          <a target="_blank">
+            <UserOutlined />
+            我的主页
+          </a>
+        </Menu.Item>
+        <Menu.Item key="signout">
+          <a>
+            <ExportOutlined />
+            退出登录
+          </a>
+        </Menu.Item>
+      </Menu>
+    )
     return (
       <div className="header">
         <Row justify="space-around">
@@ -37,9 +132,14 @@ export default class Header extends React.Component {
             />
           </Col>
           {
-            this.state.isLogin ?
+            this.state.userInfo ?
             <Col span={1} offset={6}>
-              <img src={require('../assets/image/7.jpg')} alt="头像" className="avatar"></img>
+              <Dropdown overlay={menu}>
+                <div className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                  <img src={require('../assets/image/7.jpg')} alt="头像" className="avatar"></img>
+                  <CaretDownOutlined />
+                </div>
+              </Dropdown>
             </Col>
             :
             <Col span={3} offset={4}>
@@ -54,7 +154,18 @@ export default class Header extends React.Component {
           </Col>
           <Col span={3}></Col>
         </Row>
+        <Register 
+          registerModal={ this.state.registerModal } 
+          close={ this.closeRegisterModal.bind(this) }
+        />
+        <Login 
+          loginModal={ this.state.loginModal }
+          getUserInfo={ this.getUserInfo.bind(this) }
+          close={ this.closeLoginModal.bind(this) }
+        />
       </div>
     )
   }
 }
+
+export default Header

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import { Modal, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import { registerSuccess, registerFailue } from '../../../store/modules/user'
+import { registerSuccess, registerFailue } from '../../store/modules/user'
 
 @connect(
   state => state.user,
@@ -21,21 +21,18 @@ class Register extends React.Component {
 
   handleName = (e) => {
     this.setState({
-      ...this.state,
       name: e.target.value
     })
   }
 
   handlePassword = (e) => {
     this.setState({
-      ...this.state,
       password: e.target.value
     })
   }
 
   handleRepassword = (e) => {
     this.setState({
-      ...this.state,
       rePassword: e.target.value
     })
   }
@@ -61,13 +58,14 @@ class Register extends React.Component {
     axios.post('/user/register', {name, password})
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
-          this.props.registerSuccess(res.data.data);
+          this.props.registerSuccess(res.data);
           this.props.close();
           message.success(res.data.message, 1);
           this.setState({
             name: '',
             password: '',
           });
+          console.log(this.props)
         } else {
           this.props.registerFailue(res.data.message);
           message.error(res.data.message, 1);

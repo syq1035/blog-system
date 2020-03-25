@@ -3,8 +3,10 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import { Modal, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import { loginSuccess, loginFailure } from '../../../store/modules/user'
+import {withRouter} from "react-router-dom";
+import { loginSuccess, loginFailure } from '../../store/modules/user'
 
+@withRouter
 @connect(
   state => state.user,
   { loginSuccess, loginFailure },
@@ -20,14 +22,12 @@ class Login extends React.Component {
 
   handleName = (e) => {
     this.setState({
-      ...this.state,
       name: e.target.value
     })
   }
 
   handlePassword = (e) => {
     this.setState({
-      ...this.state,
       password: e.target.value
     })
   }
@@ -45,19 +45,21 @@ class Login extends React.Component {
     axios.post('/user/login', {name, password})
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
-          this.props.loginSuccess(res.data.data);
+           this.props.loginSuccess(res.data);
           let userInfo = {
             _id: res.data.data._id,
             name: res.data.data.name,
             avatar: res.data.data.avatar,
           };
-          window.sessionStorage.userInfo = JSON.stringify(userInfo);
           message.success(res.data.message, 1);
           this.props.close();
           this.setState({
             name: '',
             password: '',
           });
+          this.props.getUserInfo()
+          // this.props.history.push('/home')
+          console.log(this.props)
         } else {
           this.props.loginFailure(res.data.message);
           message.error(res.data.message, 1);
