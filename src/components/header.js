@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
+import { withRouter } from "react-router-dom"
 import { Input, Row, Col, Button, Menu, Dropdown, message } from 'antd'
 import { CaretDownOutlined, UserOutlined, ExportOutlined } from '@ant-design/icons'
 import Register from './modals/register'
@@ -8,6 +9,7 @@ import Login from './modals/login'
 
 const { Search } = Input;
 
+@withRouter
 @connect(
   state => state.user
 )
@@ -55,28 +57,24 @@ class Header extends React.Component {
 
   showRegisterModal() {
     this.setState({
-      ...this.state,
       registerModal: true
     })
   }
 
   closeRegisterModal() {
     this.setState({
-      ...this.state,
       registerModal: false
     })
   }
 
   showLoginModal() {
     this.setState({
-      ...this.state,
       loginModal: true
     })
   }
 
   closeLoginModal() {
     this.setState({
-      ...this.state,
       loginModal: false
     })
   }
@@ -96,20 +94,30 @@ class Header extends React.Component {
     }
   }
 
+  handlePublish = () => {
+    if(this.state.userInfo) {
+      this.props.history.push('/editor')
+    } else {
+      this.showLoginModal()
+      message.success('请登录后发表文章')
+    }
+    
+  }
+
   render() {
     const menu = (
       <Menu onClick={this.handleMenuClick}>
         <Menu.Item key="0">
-          <a target="_blank">
+          <a target="_blank" href='/login'>
             <UserOutlined />
             我的主页
           </a>
         </Menu.Item>
         <Menu.Item key="signout">
-          <a>
+          <span>
             <ExportOutlined />
             退出登录
-          </a>
+          </span>
         </Menu.Item>
       </Menu>
     )
@@ -148,7 +156,7 @@ class Header extends React.Component {
             </Col>
           }
           <Col span={2}>
-            <Button type="primary" shape="round">
+            <Button type="primary" shape="round" onClick={this.handlePublish}>
               写文章
             </Button>
           </Col>

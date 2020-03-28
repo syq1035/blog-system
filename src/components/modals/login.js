@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import { Modal, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { loginSuccess, loginFailure } from '../../store/modules/user'
 
 @withRouter
@@ -45,12 +45,12 @@ class Login extends React.Component {
     axios.post('/user/login', {name, password})
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
-           this.props.loginSuccess(res.data);
-          let userInfo = {
-            _id: res.data.data._id,
-            name: res.data.data.name,
-            avatar: res.data.data.avatar,
-          };
+          this.props.loginSuccess(res.data);
+          // let userInfo = {
+          //   _id: res.data.data._id,
+          //   name: res.data.data.name,
+          //   avatar: res.data.data.avatar,
+          // };
           message.success(res.data.message, 1);
           this.props.close();
           this.setState({

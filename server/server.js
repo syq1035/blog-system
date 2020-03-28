@@ -1,8 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+let morgan = require('morgan');
 
-const usersRouter = require('./routes/users')
+const userRouter = require('./routes/user')
+const articleRouter = require('./routes/article')
 
 const mongoose = require('mongoose')
 const DB_URL = 'mongodb://localhost:27017/Blog'
@@ -16,7 +18,10 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
-app.use('/user', usersRouter);
+app.use(morgan('dev'));
+
+app.use('/user', userRouter)
+app.use('/article', articleRouter)
 
 
 app.listen(4000, function(){
