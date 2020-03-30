@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Button } from 'antd'
+import { Modal, Button, Input } from 'antd'
 class Publish extends React.Component {
 
   handlePublish = () => {
@@ -15,7 +15,11 @@ class Publish extends React.Component {
         width={360}
         footer={null}
       >
-      <Button className="publish-btn" type="primary" onClick={this.handlePublish}>确认发布</Button>
+        <div>
+          <span>标签</span>
+          <Input></Input>
+        </div>
+        <Button className="publish-btn" type="primary" onClick={this.handlePublish}>确认发布</Button>
       
       </Modal>
     )

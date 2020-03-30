@@ -46,19 +46,18 @@ class Login extends React.Component {
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
           this.props.loginSuccess(res.data);
-          // let userInfo = {
-          //   _id: res.data.data._id,
-          //   name: res.data.data.name,
-          //   avatar: res.data.data.avatar,
-          // };
+          window.sessionStorage.userInfo = JSON.stringify(res.data.data);
           message.success(res.data.message, 1);
           this.props.close();
           this.setState({
             name: '',
-            password: '',
-          });
-          this.props.getUserInfo()
-          // this.props.history.push('/home')
+            password: ''
+          })
+          if(res.data.data.type) {
+            this.props.getUserInfo()
+          } else {
+            this.props.history.push('/admin')
+          }
           console.log(this.props)
         } else {
           this.props.loginFailure(res.data.message);

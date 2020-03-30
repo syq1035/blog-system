@@ -48,6 +48,7 @@ class Header extends React.Component {
           this.setState({
             userInfo: ''
           })
+          window.sessionStorage.userInfo = '';
         }
       })
       .catch(err => {

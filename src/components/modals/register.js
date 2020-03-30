@@ -64,7 +64,8 @@ class Register extends React.Component {
           this.setState({
             name: '',
             password: '',
-          });
+            rePassword: ''
+          })
           console.log(this.props)
         } else {
           this.props.registerFailue(res.data.message);

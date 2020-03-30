@@ -42,9 +42,13 @@ class Editor extends React.Component {
   }
 
   publish = () => {
-    console.log(this.state)
     let { title, content } = this.state
-    axios.post('/article/new', { title, content })
+    let author
+    if (window.sessionStorage.userInfo) {
+      let userInfo = JSON.parse(window.sessionStorage.userInfo);
+      author = userInfo._id;
+    }
+    axios.post('/article/new', { title, content, author })
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
           message.success(res.data.message, 1)
