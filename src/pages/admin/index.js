@@ -2,47 +2,43 @@ import React from 'react'
 import { Menu } from 'antd'
 import { UserOutlined, CommentOutlined, FileTextOutlined } from '@ant-design/icons'
 import { Route, Redirect, Link } from "react-router-dom";
-import { withRouter } from "react-router-dom";
 import UserManage from '../../components/userManage'
 import ArticleManage from '../../components/articleManage'
 import CommentManage from '../../components/commentManage'
 
 
-@withRouter
 class Admin extends React.Component {
-  
-  handleMenu = ({key}) => {
-    console.log(key)
-    if(key === 1) {
-      this.props.history.push('/admin/user')
-      // return
+  constructor(props) {
+    super(props)
+    this.state = {
+      current: 'user'
     }
-    if(key === 2) {
-      this.props.history.push('/admin/article')
-      // return
-    }
-    if(key === 3) {
-      this.props.history.push('/admin/comment')
-      // return
-    }
-    console.log(this.props)
   }
+
+  handleMenu = ({key}) => {
+    this.setState({
+      current: key
+    })
+  }
+
   render () {
     return (
       <div className="admin">
         <div className="admin-menu">
           <Menu
             theme="dark"
+            selectedKeys={[this.state.current]}
+            onClick={this.handleMenu}
           >
-            <Menu.Item key="1">
+            <Menu.Item key="user">
               <UserOutlined /> 
               <Link to="/admin/user">用户管理</Link>
             </Menu.Item>
-            <Menu.Item key="2">
+            <Menu.Item key="artivle">
               <FileTextOutlined />
               <Link to="/admin/article">文章管理</Link>
             </Menu.Item>
-            <Menu.Item key="3">
+            <Menu.Item key="comment">
               <CommentOutlined />
               <Link to="/admin/comment">评论管理</Link>
             </Menu.Item>

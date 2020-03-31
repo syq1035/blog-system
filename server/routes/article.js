@@ -10,6 +10,7 @@ router.post('/new', function(req, res){
     content,
     author
   })
+  console.log(article)
   article.save()
     .then(data => {
       responseC(res, 200, 0, '发布文章成功') 

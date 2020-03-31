@@ -5,10 +5,13 @@ const articleSchema = new mongoose.Schema({
 	title: { type: String, required: true, validate: /\S+/ },
 
 	// 作者
-	author: { type: String, required: true },
+	author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 
 	// 文章内容
 	content: { type: String, required: true, validate: /\S+/ },
+
+	//文章描述
+	description: { type: String, default: '' },
 
 	// 标签
 	tags: { type: Array, default: [] },
