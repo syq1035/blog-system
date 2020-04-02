@@ -89,7 +89,6 @@ class Header extends React.Component {
   }
 
   handleMenuClick = ({key}) => {
-    console.log(key)
     if(key === 'signout'){
       this.signOut()
     }

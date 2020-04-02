@@ -58,7 +58,6 @@ class Login extends React.Component {
           } else {
             this.props.history.push('/admin')
           }
-          console.log(this.props)
         } else {
           this.props.loginFailure(res.data.message);
           message.error(res.data.message, 1);

@@ -2,9 +2,9 @@ import React from 'react'
 import { Menu } from 'antd'
 import { UserOutlined, CommentOutlined, FileTextOutlined } from '@ant-design/icons'
 import { Route, Redirect, Link } from "react-router-dom";
-import UserManage from '../../components/userManage'
-import ArticleManage from '../../components/articleManage'
-import CommentManage from '../../components/commentManage'
+import UserManage from './userManage'
+import ArticleManage from './articleManage'
+import CommentManage from './commentManage'
 
 
 class Admin extends React.Component {

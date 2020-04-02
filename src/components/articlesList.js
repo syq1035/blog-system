@@ -25,7 +25,6 @@ class ArticlesList extends React.Component {
 
   componentDidMount() {
     this.getArticlesList()
-    console.log(this.props)
   }
 
   getArticlesList = () => {
@@ -50,7 +49,7 @@ class ArticlesList extends React.Component {
     this.setState({
       loading: true,
     })
-    if (articles.length > this.state.total) {
+    if (articles.length >= this.state.total) {
       message.warning('没有更多了');
       this.setState({
         hasMore: false,
@@ -90,7 +89,7 @@ class ArticlesList extends React.Component {
                 >
                 <List.Item.Meta
                   avatar={<Avatar src={item.avatar} />}
-                  title={<a href={'http://localhost:3000/article/'+item._id} target="_brank">{item.title}</a>}
+                  title={<a href={'http://localhost:3000/article/'+item._id} target="_blank" rel="noopener noreferrer">{item.title}</a>}
                   description={item.description}
                 />
                 <div className='list-content' dangerouslySetInnerHTML = {{__html: item.content}} />
@@ -104,6 +103,9 @@ class ArticlesList extends React.Component {
             )}
           </List>
         </InfiniteScroll>
+        {
+        //   this.state.hasMore ? null : <span>没有更多了~</span>
+        }
       </div>
     );
   }

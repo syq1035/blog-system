@@ -1,0 +1,76 @@
+.detail
+  width: 100%;
+  height: 100%;
+  background-color: #f1f1f1;
+
+.detail-main
+  margin: 0 auto;
+  width: 100%;
+  max-width: 960px;
+  height: calc(100% - 64px - .33rem)
+  overflow: auto;
+  margin-top: .33rem;
+  padding: 18px 24px;
+  background-color: #fff;
+
+  .author-info
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.6rem;
+
+    .author
+      margin-left: 10px;
+
+      .name
+        font-size: 1.4rem
+        
+      .time span
+        margin-right: .5rem
+
+  .content
+    word-break: break-word;
+    line-height: 1.75;
+    font-weight: 400;
+    font-size: 15px;
+    overflow-x: hidden;
+
+  .suspended-panel
+    position: fixed;
+    margin-left: -7rem;
+    top: 16rem;
+
+  .panel-btn
+    
+
+    .icon
+      display: flex;
+      align-items: center;
+      justify-content: center
+      width: 2rem;
+      height: 2rem;
+      margin-bottom: 1rem;
+      background-color: #fff;
+      background-position: 50%;
+      background-repeat: no-repeat;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px 0 rgba(0,0,0,.04);
+      cursor: pointer;
+
+  .comment
+    width: 100%;
+
+    .title
+      font-size: 16px;
+      font-weight: 400;
+      text-align: center;
+      padding: 1.67rem 0 5px;
+
+    .comment-form
+      display: flex;
+      margin: 1.333rem 0;
+      padding: 1rem 1.333rem;
+      background-color: #fafbfc;
+      border-radius: 3px;
+
+      .text
+        margin-left: 1.3rem;

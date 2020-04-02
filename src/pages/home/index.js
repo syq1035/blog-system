@@ -12,7 +12,6 @@ class Home extends React.Component {
   }
 
   handleMenu = ({key}) => {
-    console.log(key)
     this.setState({
       sort: key
     })
