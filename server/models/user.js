@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   type: { type: Number, default: 1 },
 
   phone: { type: String, default: '' },
-  avatar: { type: String, default: 'user' },
+  avatar: { type: String, default: '' },
   create_time: { type: Date, default: Date.now },
   update_time: { type: Date, default: Date.now },
 })

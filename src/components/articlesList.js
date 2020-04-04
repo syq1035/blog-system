@@ -66,7 +66,7 @@ class ArticlesList extends React.Component {
 
   render() {
     return (
-      <div className="demo-infinite-container">
+      <div className="infinite-container">
         <InfiniteScroll
           initialLoad={false}
           pageStart={0}
@@ -89,7 +89,7 @@ class ArticlesList extends React.Component {
                 >
                 <List.Item.Meta
                   avatar={<Avatar src={item.avatar} />}
-                  title={<a href={'http://localhost:3000/article/'+item._id} target="_blank" rel="noopener noreferrer">{item.title}</a>}
+                  title={<a href={'/article/'+item._id} target="_blank" rel="noopener noreferrer">{item.title}</a>}
                   description={item.description}
                 />
                 <div className='list-content' dangerouslySetInnerHTML = {{__html: item.content}} />
@@ -97,7 +97,7 @@ class ArticlesList extends React.Component {
             )}
           >
             {this.state.loading && this.state.hasMore && (
-              <div className="demo-loading-container">
+              <div className="loading-container">
                 <Spin />
               </div>
             )}

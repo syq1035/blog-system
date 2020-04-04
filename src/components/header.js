@@ -28,17 +28,11 @@ class Header extends React.Component {
   }
 
   getUserInfo() {
-    axios.get('/user/info')
-      .then(res => {
-        if(res.status === 200 && res.data.code === 0){
-          this.setState({
-            userInfo: res.data.data
-          })
-        }
+    if (window.sessionStorage.userInfo) {
+      this.setState({
+        userInfo: JSON.parse(window.sessionStorage.userInfo)
       })
-      .catch(err => {
-        console.log(err)
-      })
+    }
   }
 
   signOut() {
@@ -88,6 +82,10 @@ class Header extends React.Component {
     this.showLoginModal()
   }
 
+  toHome = () => {
+    this.props.history.push('/home')
+  }
+
   handleMenuClick = ({key}) => {
     if(key === 'signout'){
       this.signOut()
@@ -107,8 +105,8 @@ class Header extends React.Component {
   render() {
     const menu = (
       <Menu onClick={this.handleMenuClick}>
-        <Menu.Item key="0">
-          <a target="_blank" href='/login'>
+        <Menu.Item key="index">
+          <a href={'/user/' + this.state.userInfo._id}>
             <UserOutlined />
             我的主页
           </a>
@@ -129,7 +127,7 @@ class Header extends React.Component {
             <span className="title">博客</span>
             </Col>
           <Col span={3}>
-            <Button type="link">首页</Button>
+            <Button type="link" onClick={this.toHome}>首页</Button>
             <Button type="link">讨论区</Button>
           </Col>
           <Col span={4}>

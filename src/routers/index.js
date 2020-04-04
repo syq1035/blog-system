@@ -1,20 +1,16 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import Login from '../pages/login/index'
-import Home from '../pages/home/index'
-import Editor from '../pages/editor/index'
-import Admin from '../pages/admin/index'
-import Detail from '../pages/detail/index';
+import Home from '../pages/home'
+import Editor from '../pages/editor'
+import Admin from '../pages/admin'
+import Detail from '../pages/detail';
+import User from '../pages/user';
 
 export default class AppRouter extends React.Component {
   render () {
     return (
       <BrowserRouter>
         <Switch>
-          <Route
-            path="/login"
-            component={Login}
-          />
           <Route
             path="/home"
             component={Home}
@@ -30,6 +26,10 @@ export default class AppRouter extends React.Component {
           <Route
             path="/article/"
             component={Detail}
+          />
+          <Route
+            path='/user/'
+            component={User}
           />
           <Redirect to='/home' />
         </Switch>

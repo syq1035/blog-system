@@ -5,7 +5,7 @@ class Detail extends React.Component {
   
   render () {
     return (
-      <div className="detail">
+      <div className="home">
         <Header />
         <ArticleDetail />
       </div>

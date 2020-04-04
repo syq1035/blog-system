@@ -25,7 +25,7 @@ router.post('/new', function(req, res){
 router.get('/list', function(req, res) {
   const pageSize = parseInt(req.query.pageSize)
   const pageNum = parseInt(req.query.pageNum-1)
-  Article.count()
+  Article.countDocuments()
     .then(count => {
       Article.find().skip(pageSize * pageNum).limit(pageSize).populate({ path: 'users' })
         .then(data => {
@@ -64,9 +64,20 @@ router.get('/detail', function(req, res) {
     })
 })
 
+router.get('/info', function(req, res) {
+  const author = req.query.author
+  Article.find({author: author})
+    .then(article => {
+      responseC(res, 200, 0, '', article)
+    })
+    .catch(err => {
+      responseC(res)
+    })
+})
+
 router.put('/view', function(req, res) {
   const {_id }= req.body
-  Article.update({_id},{ $inc: { viewCount: 1 } })
+  Article.updateOne({_id},{ $inc: { viewCount: 1 } })
     .then(data => {
       responseC(res, 200, 0, '阅读')
     })

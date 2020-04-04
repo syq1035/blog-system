@@ -52,7 +52,7 @@ router.post('/signout', function(req, res) {
   }
 })
 
-router.get('/info', function(req, res) {
+router.get('/status', function(req, res) {
   if (req.session.userInfo) {
     responseC(res, 200, 0, '', req.session.userInfo);
   } else {
@@ -82,6 +82,17 @@ router.delete('/delete', function(req, res){
   User.remove({_id})
     .then(data => {
       responseC(res, 200, 0, '删除成功')
+    })
+    .catch(err => {
+      responseC(res)
+    })
+})
+
+router.get('/info', function(req, res){
+  const _id = req.query._id
+  User.findById(_id, _filter)
+    .then(user => {
+      responseC(res, 200, 0, '', user)
     })
     .catch(err => {
       responseC(res)
