@@ -6,6 +6,9 @@ const session = require('express-session');
 
 const userRouter = require('./routes/user')
 const articleRouter = require('./routes/article')
+const commentRouter = require('./routes/comment')
+const collectRouter = require('./routes/collect')
+const likeRouter = require('./routes/like')
 
 const mongoose = require('mongoose')
 const DB_URL = 'mongodb://localhost:27017/Blog'
@@ -32,6 +35,9 @@ app.use(morgan('dev'));
 
 app.use('/user', userRouter)
 app.use('/article', articleRouter)
+app.use('/comment', commentRouter)
+app.use('/collect', collectRouter)
+app.use('/like', likeRouter)
 
 
 app.listen(4000, function(){

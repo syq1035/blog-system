@@ -79,7 +79,7 @@ router.get('/list', function(req, res) {
 
 router.delete('/delete', function(req, res){
   const _id = req.query._id
-  User.remove({_id})
+  User.deleteOne({_id})
     .then(data => {
       responseC(res, 200, 0, '删除成功')
     })
