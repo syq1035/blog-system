@@ -27,8 +27,8 @@ class ArticleDetail extends React.Component {
     if(window.sessionStorage.userInfo) {
       const userInfo = JSON.parse(window.sessionStorage.userInfo)
       const data = {
-        article_id: this.article_id,
-        user_id: userInfo._id
+        article: this.article_id,
+        user: userInfo._id
       }
       this.getLikeStatus(data)
       this.getCollectStatus(data)
@@ -48,7 +48,7 @@ class ArticleDetail extends React.Component {
   }
 
   getLikeCount = () => {
-    axios.get('/like/count', {params: {article_id: this.article_id}})
+    axios.get('/like/count', {params: {article: this.article_id}})
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
           this.setState({
@@ -94,8 +94,8 @@ class ArticleDetail extends React.Component {
     if(window.sessionStorage.userInfo) {
       const userInfo = JSON.parse(window.sessionStorage.userInfo)
       const like = {
-        article_id: this.article_id,
-        user_id: userInfo._id
+        article: this.article_id,
+        user: userInfo._id
       }
       if(this.state.like) {
         axios.post('/like/del', like)
@@ -124,8 +124,8 @@ class ArticleDetail extends React.Component {
     if(window.sessionStorage.userInfo) {
       const userInfo = JSON.parse(window.sessionStorage.userInfo)
       const collect =  {
-        article_id: this.article_id,
-        user_id: userInfo._id
+        article: this.article_id,
+        user: userInfo._id
       }
       if(this.state.collect) {
         axios.post('/collect/del', collect)

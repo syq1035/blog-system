@@ -28,6 +28,9 @@ router.get('/list', function(req, res) {
   Article.countDocuments()
     .then(count => {
       Article.find().skip(pageSize * pageNum).limit(pageSize).populate({ path: 'users' })
+        .populate([
+          { path: 'author', select: 'name' }
+        ])
         .then(data => {
           if(data) {
             responseC(res, 200, 0, '', {articles: data, total: count})

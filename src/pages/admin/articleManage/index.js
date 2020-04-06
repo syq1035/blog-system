@@ -28,6 +28,11 @@ class ArticleManage extends React.Component {
       title: '作者',
       dataIndex: 'author',
       key: 'author',
+      render: (text, record) => (
+        <span>
+          {record.author.name}
+        </span>
+      )
     },
     {
       title: '浏览量',

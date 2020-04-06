@@ -36,12 +36,12 @@ class Header extends React.Component {
   }
 
   signOut() {
+    this.setState({
+      userInfo: ''
+    })
     axios.post('/user/signout')
       .then(res => {
         if(res.status === 200 && res.data.code === 0){
-          this.setState({
-            userInfo: ''
-          })
           window.sessionStorage.userInfo = '';
         }
       })

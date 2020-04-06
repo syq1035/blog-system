@@ -4,10 +4,10 @@ const { responseC } = require('../utils/index')
 const Collect = require('../models/collect')
 
 router.post('/new', function(req, res){
-  const { article_id, user_id } = req.body
+  const { article, user } = req.body
   const collect = new Collect({
-    article_id,
-    user_id
+    article,
+    user
   })
   collect.save()
     .then(data => {
@@ -19,10 +19,10 @@ router.post('/new', function(req, res){
 })
 
 router.post('/del', function(req, res){
-  const { article_id, user_id } = req.body
+  const { article, user } = req.body
   const collect = new Collect({
-    article_id,
-    user_id
+    article,
+    user
   })
   Collect.remove(collect)
     .then(data => {
@@ -34,11 +34,39 @@ router.post('/del', function(req, res){
 })
 
 router.get('/info', function(req, res){
-  const { article_id, user_id } = req.query
-  Collect.findOne({ article_id, user_id })
+  const { article, user } = req.query
+  Collect.findOne({ article, user })
     .then(collect => {
       if(collect){
         responseC(res, 200, 0, '', {iscollect: true})
+      }
+    })
+    .catch(err => {
+      responseC(res)
+    })
+})
+
+router.get('/user', function(req, res) {
+  const { user } = req.query
+  Collect.find({ user })
+    .populate({ 
+      path: 'article', 
+      populate: { path: 'author', select: 'avatar' },
+    })
+    .then(data => {
+      if(data){
+        data = data.map(item => {
+          return {
+            _id: item.article._id,
+            title: item.article.title,
+            description: item.article.description,
+            content: item.article.content,
+            create_time: item.article.create_time,
+            user_id: item.article.author._id,
+            user_avatar: item.article.author.avatar
+          }
+        })
+        responseC(res, 200, 0, '', data)
       }
     })
     .catch(err => {

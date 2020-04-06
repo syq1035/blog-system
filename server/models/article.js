@@ -35,4 +35,4 @@ const articleSchema = new mongoose.Schema({
 	update_time: { type: Date, default: Date.now }
 })
 
-module.exports = mongoose.model('Articles', articleSchema)
+module.exports = mongoose.model('Article', articleSchema)

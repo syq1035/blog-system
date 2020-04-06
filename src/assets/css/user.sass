@@ -1,23 +1,29 @@
 .user-main
   margin: 0 auto;
-  max-width: 920px;
-  max-height: calc(100% - 64px - 1rem)
+  max-width: 1080px;
+  height: calc(100% - 64px - 1rem)
   overflow: auto;
   margin-top: 1rem;
+  display: flex;
 
   .user-info
-    display: flex;
-    align-items: center;
-    padding: 2rem;
+    width: 20%;
+    height: 10rem;
+    margin-right: 1rem;
+    padding: 1rem;
     background-color: #fff;
 
-    .right
-      margin-left: 20px;
+    .top
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+      .right
+        margin-left: 20px;
 
-      .name
-        font-size: 2rem;
+        .name
+          font-size: 1.8rem;
 
   .detail
-    max-height: calc(100% - 64px - 5rem)
-    margin-top: .5rem;
+    height: calc(100% - 1rem);
+    width: calc(100% - 20% - 1rem);
     background-color: #fff;

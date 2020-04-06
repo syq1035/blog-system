@@ -4,10 +4,10 @@ const { responseC } = require('../utils/index')
 const Comment = require('../models/comment')
 
 router.post('/new', function(req, res){
-  let { article_id, user_id, content } = req.body
+  let { article, user, content } = req.body
   const comment = new Comment({
-    article_id,
-    user_id,
+    article,
+    user,
     content
   })
   comment.save()

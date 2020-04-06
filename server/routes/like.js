@@ -4,10 +4,10 @@ const { responseC } = require('../utils/index')
 const Like = require('../models/like')
 
 router.post('/new', function(req, res){
-  const { article_id, user_id } = req.body
+  const { article, user } = req.body
   const like = new Like({
-    article_id,
-    user_id
+    article,
+    user
   })
   like.save()
     .then(data => {
@@ -19,10 +19,10 @@ router.post('/new', function(req, res){
 })
 
 router.post('/del', function(req, res){
-  const { article_id, user_id } = req.body
+  const { article, user } = req.body
   const like = new Like({
-    article_id,
-    user_id
+    article,
+    user
   })
   Like.deleteOne(like)
     .then(data => {
@@ -34,8 +34,8 @@ router.post('/del', function(req, res){
 })
 
 router.get('/info', function(req, res){
-  const { article_id, user_id } = req.query
-  Like.findOne({ article_id, user_id })
+  const { article, user } = req.query
+  Like.findOne({ article, user })
     .then(like => {
       if(like) {
         responseC(res, 200, 0, '', {islike: true})
@@ -48,10 +48,38 @@ router.get('/info', function(req, res){
 })
 
 router.get('/count', function(req, res){
-  const { article_id } = req.query
-  Like.countDocuments({ article_id })
+  const { article } = req.query
+  Like.countDocuments({ article })
     .then(count => {
       responseC(res, 200, 0, '', {count: count})
+    })
+    .catch(err => {
+      responseC(res)
+    })
+})
+
+router.get('/user', function(req, res) {
+  const { user } = req.query
+  Like.find({ user })
+    .populate({ 
+      path: 'article', 
+      populate: { path: 'author', select: 'avatar' },
+    })
+    .then(data => {
+      if(data){
+        data = data.map(item => {
+          return {
+            _id: item.article._id,
+            title: item.article.title,
+            description: item.article.description,
+            content: item.article.content,
+            create_time: item.article.create_time,
+            user_id: item.article.author._id,
+            user_avatar: item.article.author.avatar
+          }
+        })
+        responseC(res, 200, 0, '', data)
+      }
     })
     .catch(err => {
       responseC(res)
