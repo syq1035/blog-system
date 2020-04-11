@@ -51,7 +51,7 @@ router.get('/count', function(req, res){
   const { article } = req.query
   Like.countDocuments({ article })
     .then(count => {
-      responseC(res, 200, 0, '', {count: count})
+      responseC(res, 200, 0, '获取文章点赞数', {count: count})
     })
     .catch(err => {
       responseC(res)
@@ -78,7 +78,7 @@ router.get('/user', function(req, res) {
             user_avatar: item.article.author.avatar
           }
         })
-        responseC(res, 200, 0, '', data)
+        responseC(res, 200, 0, '获取用户点赞列表成功', data)
       }
     })
     .catch(err => {

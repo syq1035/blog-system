@@ -1,8 +1,11 @@
 import React from 'react'
 import { withRouter } from "react-router-dom"
 import axios from 'axios'
-import { Avatar, Badge, Input, message } from 'antd'
+import { Avatar, Badge, Input, message, Button } from 'antd'
 import { MessageFilled, LikeFilled, StarFilled } from '@ant-design/icons'
+import CommentList from '../components/comment'
+
+const { TextArea } = Input;
 
 @withRouter
 class ArticleDetail extends React.Component {
@@ -11,6 +14,7 @@ class ArticleDetail extends React.Component {
     this.state ={
       user: {},
       article: {},
+      comments: [],
       commentText: '',
       likeCount: 0,
       like: false,
@@ -22,8 +26,9 @@ class ArticleDetail extends React.Component {
 
   componentDidMount() {
     this.getInfo()
-    this.view()
     this.getLikeCount()
+    this.getComments()
+    this.view()
     if(window.sessionStorage.userInfo) {
       const userInfo = JSON.parse(window.sessionStorage.userInfo)
       const data = {
@@ -53,6 +58,17 @@ class ArticleDetail extends React.Component {
         if (res.status === 200 && res.data.code === 0) {
           this.setState({
             likeCount: res.data.data.count
+          })
+        }
+      })
+  }
+
+  getComments = () => {
+    axios.get('/comment/article', {params: {article: this.article_id}})
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          this.setState({
+            comments: res.data.data
           })
         }
       })
@@ -88,6 +104,33 @@ class ArticleDetail extends React.Component {
     this.setState({
       commentText: e.target.value
     })
+  }
+
+  inputOnFocus = () => {
+    if(!window.sessionStorage.userInfo) {
+      message.error('请登录后评论~')
+    }
+  }
+
+  handleComment = () => {
+    if(this.state.commentText) {
+      const userInfo = JSON.parse(window.sessionStorage.userInfo)
+      const comment = {
+        article: this.article_id,
+        user: userInfo._id,
+        content: this.state.commentText
+      }
+      axios.post('/comment/new', comment)
+        .then(res => {
+          if (res.status === 200 && res.data.code === 0) {
+            message.success('评论成功')
+            this.getComments()
+            this.setState({
+              commentText: ''
+            })
+          }
+        })
+    }
   }
 
   handleLike = () => {
@@ -191,12 +234,25 @@ class ArticleDetail extends React.Component {
           <div className="title">评论</div>
           <div className="comment-form">
             <Avatar src={this.state.user.avater}></Avatar>
-            <Input 
+            <TextArea  
               className="text"
+              autoSize={{ minRows: 1, maxRows: 4 }}
               placeholder="输入评论..." 
               value={this.state.commentText}
               onChange={this.handleCommentText}
+              onPressEnter={this.handleComment}
+              onFocus={this.inputOnFocus}
             />
+            <Button type="primary" onClick={this.handleComment}>评论</Button>
+          </div>
+          <div className="comment-list">
+            {
+              this.state.comments && this.state.comments.length>0 ?
+              this.state.comments.map(item => {
+               return <CommentList key={item._id} info={item} />
+              })
+              : ''
+            }
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true, default: '' },
-  password: { type: String, required: true, default: '' },
+  name: { type: String, required: true },
+  password: { type: String, required: true },
 
   //用户类型 0：管理员，1：普通用户
   type: { type: Number, default: 1 },
