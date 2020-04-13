@@ -113,24 +113,26 @@ class ArticleDetail extends React.Component {
   }
 
   handleComment = () => {
-    if(this.state.commentText) {
-      const userInfo = JSON.parse(window.sessionStorage.userInfo)
-      const comment = {
-        article: this.article_id,
-        user: userInfo._id,
-        content: this.state.commentText
-      }
-      axios.post('/comment/new', comment)
-        .then(res => {
-          if (res.status === 200 && res.data.code === 0) {
-            message.success('评论成功')
-            this.getComments()
-            this.setState({
-              commentText: ''
-            })
-          }
-        })
+    if(!this.state.commentText) {
+      message.error('请输入评论')
+      return
     }
+    const userInfo = JSON.parse(window.sessionStorage.userInfo)
+    const comment = {
+      article: this.article_id,
+      user: userInfo._id,
+      content: this.state.commentText
+    }
+    axios.post('/comment/new', comment)
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          message.success('评论成功')
+          this.getComments()
+          this.setState({
+            commentText: ''
+          })
+        }
+      })
   }
 
   handleLike = () => {
@@ -249,7 +251,7 @@ class ArticleDetail extends React.Component {
             {
               this.state.comments && this.state.comments.length>0 ?
               this.state.comments.map(item => {
-               return <CommentList key={item._id} info={item} />
+               return <CommentList key={item._id} info={item} getComments={this.getComments} />
               })
               : ''
             }
