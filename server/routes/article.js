@@ -89,4 +89,22 @@ router.put('/view', function(req, res) {
     })
 })
 
+router.get('/search', function(req, res) {
+  const {text} = req.query
+  console.log(text, req.query)
+  Article.find({
+    $or: [ //多条件，数组
+      {title : {$regex : text, $options: '$i'}},
+      {content : {$regex : text, $options: '$i'}}
+    ]
+  }).populate([
+    { path: 'author', select: 'name avatar' }
+  ])
+  .then(data => {
+    if(data) {
+      responseC(res, 200, 0, '搜索成功', data)
+    }
+  })
+})
+
 module.exports = router;

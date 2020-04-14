@@ -86,9 +86,16 @@ class Header extends React.Component {
     this.props.history.push('/home')
   }
 
+  search(value) {
+    this.props.history.push('/search', {text: value})
+  }
+
   handleMenuClick = ({key}) => {
-    if(key === 'signout'){
+    if(key === 'signout') {
       this.signOut()
+    }
+    if(key === 'myhome') {
+      this.props.history.push('/user/'+this.state.userInfo._id)
     }
   }
 
@@ -105,11 +112,11 @@ class Header extends React.Component {
   render() {
     const menu = (
       <Menu onClick={this.handleMenuClick}>
-        <Menu.Item key="index">
-          <a href={'/user/' + this.state.userInfo._id}>
+        <Menu.Item key="myhome">
+          <span>
             <UserOutlined />
             我的主页
-          </a>
+          </span>
         </Menu.Item>
         <Menu.Item key="signout">
           <span>
@@ -133,7 +140,7 @@ class Header extends React.Component {
           <Col span={4}>
             <Search
               placeholder="搜索"
-              onSearch={value => console.log(value)}
+              onSearch={value => this.search(value)}
               style={{ width: 200 }}
             />
           </Col>
