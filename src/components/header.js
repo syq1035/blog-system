@@ -2,10 +2,10 @@ import React from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { withRouter } from "react-router-dom"
-import { Input, Row, Col, Button, Menu, Dropdown, message } from 'antd'
-import { CaretDownOutlined, UserOutlined, ExportOutlined } from '@ant-design/icons'
+import { Input, Row, Col, Button, message } from 'antd'
 import Register from './modals/register'
 import Login from './modals/login'
+import UserMenu from '../components/userMenu'
 
 const { Search } = Input;
 
@@ -50,36 +50,28 @@ class Header extends React.Component {
       })
   }
 
-  showRegisterModal() {
+  showRegisterModal = () => {
     this.setState({
       registerModal: true
     })
   }
 
-  closeRegisterModal() {
+  closeRegisterModal = () => {
     this.setState({
       registerModal: false
     })
   }
 
-  showLoginModal() {
+  showLoginModal = () => {
     this.setState({
       loginModal: true
     })
   }
 
-  closeLoginModal() {
+  closeLoginModal = () => {
     this.setState({
       loginModal: false
     })
-  }
-
-  handleRegister = () => {
-    this.showRegisterModal()
-  }
-
-  handleLogin = () => {
-    this.showLoginModal()
   }
 
   toHome = () => {
@@ -90,47 +82,21 @@ class Header extends React.Component {
     this.props.history.push('/search', {text: value})
   }
 
-  handleMenuClick = ({key}) => {
-    if(key === 'signout') {
-      this.signOut()
-    }
-    if(key === 'myhome') {
-      this.props.history.push('/user/'+this.state.userInfo._id)
-    }
-  }
-
   handlePublish = () => {
     if(this.state.userInfo) {
       this.props.history.push('/editor')
     } else {
       this.showLoginModal()
-      message.success('请登录后发表文章')
-    }
-    
+      message.error('请登录后发表文章')
+    }    
   }
 
   render() {
-    const menu = (
-      <Menu onClick={this.handleMenuClick}>
-        <Menu.Item key="myhome">
-          <span>
-            <UserOutlined />
-            我的主页
-          </span>
-        </Menu.Item>
-        <Menu.Item key="signout">
-          <span>
-            <ExportOutlined />
-            退出登录
-          </span>
-        </Menu.Item>
-      </Menu>
-    )
     return (
       <div className="header">
         <Row justify="space-around">
           <Col span={3} offset={2}>
-            <img src={require('../assets/image/logoo.png')} alt="头像" className="logo" />
+            <img src={require('../assets/image/logoo.png')} alt="logo" className="logo" />
             <span className="title">博客</span>
             </Col>
           <Col span={3}>
@@ -147,17 +113,12 @@ class Header extends React.Component {
           {
             this.state.userInfo ?
             <Col span={1} offset={6}>
-              <Dropdown overlay={menu}>
-                <div className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                  <img src={require('../assets/image/7.jpg')} alt="头像" className="avatar"></img>
-                  <CaretDownOutlined />
-                </div>
-              </Dropdown>
+              <UserMenu signOut={this.signOut.bind(this)} />
             </Col>
             :
             <Col span={3} offset={4}>
-              <Button type="link" onClick={this.handleLogin} >登录</Button>
-              <Button  shape="round" onClick={this.handleRegister} >注册</Button>
+              <Button type="link" onClick={this.showLoginModal} >登录</Button>
+              <Button  shape="round" onClick={this.showRegisterModal} >注册</Button>
             </Col>
           }
           <Col span={2}>
@@ -169,12 +130,14 @@ class Header extends React.Component {
         </Row>
         <Register 
           registerModal={ this.state.registerModal } 
-          close={ this.closeRegisterModal.bind(this) }
+          showLoginModal={ this.showLoginModal }
+          close={ this.closeRegisterModal }
         />
         <Login 
           loginModal={ this.state.loginModal }
+          showRegisterModal={ this.showRegisterModal}
           getUserInfo={ this.getUserInfo.bind(this) }
-          close={ this.closeLoginModal.bind(this) }
+          close={ this.closeLoginModal }
         />
       </div>
     )

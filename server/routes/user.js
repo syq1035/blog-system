@@ -46,10 +46,8 @@ router.post('/login', function(req, res) {
 })
 
 router.post('/signout', function(req, res) {
-  if (req.session.userInfo) {
     req.session.userInfo = null; 
     responseC(res, 200, 0, '登出成功');
-  }
 })
 
 router.get('/status', function(req, res) {

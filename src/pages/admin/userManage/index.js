@@ -52,7 +52,7 @@ class UserManage extends React.Component {
       key: 'op',
       render: (text, record) => (
         <span>
-          <Button type="primary" shape="round" danger onClick={this.delete.bind(this, record._id)}>删除</Button>
+          <Button type="primary" shape="round" danger onClick={this.delete.bind(this, record._id)}>注销</Button>
         </span>
       )
     }

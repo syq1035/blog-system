@@ -6,6 +6,7 @@ import Admin from '../pages/admin'
 import Detail from '../pages/detail';
 import User from '../pages/user';
 import Search from '../pages/search'
+import Setting from '../pages/setting';
 
 export default class AppRouter extends React.Component {
   render () {
@@ -21,10 +22,6 @@ export default class AppRouter extends React.Component {
             component={Editor}
           />
           <Route
-            path="/admin"
-            component={Admin}
-          />
-          <Route
             path="/article/"
             component={Detail}
           />
@@ -35,6 +32,14 @@ export default class AppRouter extends React.Component {
           <Route
             path='/search'
             component={Search}
+          />
+          <Route
+            path="/setting"
+            component={Setting}
+          />
+          <Route
+            path="/admin"
+            component={Admin}
           />
           <Redirect to='/home' />
         </Switch>

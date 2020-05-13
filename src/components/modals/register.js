@@ -73,6 +73,11 @@ class Register extends React.Component {
       })
   }
 
+  showLogin = () => {
+    this.props.close()
+    this.props.showLoginModal()
+  }
+
   render() {
     return (
       <Modal 
@@ -102,6 +107,9 @@ class Register extends React.Component {
           onChange={this.handleRepassword}
           value={this.state.rePassword} />
         <Button className="login-btn" type="primary" onClick={this.handleRegister}>注册</Button>
+        <div className="alink">
+          <Button type="link" onClick={this.showLogin} >已有账号，去登录</Button>
+        </div>
       </Modal>
     )
   }

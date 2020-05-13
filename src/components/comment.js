@@ -18,8 +18,6 @@ class CommentList extends React.Component {
     this.article_id = this.props.location.pathname.substring(9)
   }
 
-  // article_id = this.props.location.pathname.substring(9)
-
   handleReplytoText = (e) => {
     this.setState({
       replytoText: e.target.value
@@ -125,7 +123,7 @@ class CommentList extends React.Component {
               }
               content={
                 <div>
-                  <p>{comment.content}</p>
+                  <p>{item.content}</p>
                   <div className="reply_to" onClick={this.changeReplytoTDisplay}><MessageOutlined />回复</div>
                   <div className={this.state.replytoTDisplay ? "replyto_show" : "replyto_hidden"}>
                     <TextArea  

@@ -68,6 +68,11 @@ class Login extends React.Component {
       });
   }
 
+  showRegister = () => {
+    this.props.close()
+    this.props.showRegisterModal()
+  }
+
   render() {
     return (
       <Modal 
@@ -92,6 +97,9 @@ class Login extends React.Component {
           onChange={this.handlePassword}
           prefix={<LockOutlined />} />
         <Button className="login-btn" type="primary" onClick={this.handleLogin}>登录</Button>
+        <div className="alink">
+          <Button type="link" onClick={this.showRegister} >还没账号，去注册</Button>
+        </div>
       </Modal>
     )
   }

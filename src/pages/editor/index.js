@@ -5,7 +5,7 @@ import MdEditor from 'react-markdown-editor-lite'
 import 'react-markdown-editor-lite/lib/index.css'
 import { Input, Button, message } from 'antd'
 import Publish from '../../components/modals/publish'
-
+import UserMenu from '../../components/userMenu'
 class Editor extends React.Component {
   constructor (props) {
     super(props)
@@ -57,8 +57,7 @@ class Editor extends React.Component {
       })
       .catch(err => {
         console.log(err);
-      });
-    
+      })   
   }
 
   render () {
@@ -66,6 +65,7 @@ class Editor extends React.Component {
       <div className="editor">
         <div className="editor-header">
           <Input placeholder="请输入文章标题" className="editor-title" value={this.state.title} onChange={this.handleTitle} />
+          <UserMenu />
           <Button type="primary" shape="round" className="publish" onClick={this.showPublishModal}>
             发布
           </Button>
@@ -88,8 +88,7 @@ class Editor extends React.Component {
           publishModal={this.state.publishModal}
           close={this.closePublishModal.bind(this)}
           publish={this.publish}
-        />
-        
+        />        
       </div>
     )
   }
