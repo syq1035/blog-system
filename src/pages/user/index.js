@@ -4,6 +4,7 @@ import { MessageOutlined, LikeOutlined, EyeOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import { withRouter } from "react-router-dom"
 import Header from '../../components/header'
+import momentDate from '../../utils/index'
 
 const IconText = ({ icon, text }) => (
   <span>
@@ -142,14 +143,24 @@ class User extends React.Component {
                     >
                     <List.Item.Meta
                       avatar={
-                        <a href={this.state.nav==='article' ? '/user/'+this.state.user._id : '/user/'+item.user_id}>
-                          <Avatar src={this.state.nav==='article' ? this.state.user.avatar : item.user_avatar} />
+                        <a href={'/user/'+item.author._id}>
+                          <Avatar src={item.author.avatar} />
                         </a>
                       }
-                      title={<a href={'/article/'+item._id} target="_blank" rel="noopener noreferrer">{item.title}</a>}
+                      title={
+                        <div className="list-title">
+                          <a href={'/article/'+item._id} target="_blank" rel="noopener noreferrer" className="title">{item.title}</a>
+                          <div className="dec">
+                            <span>{item.author.name}</span>
+                            <span className="time">{momentDate(item.create_time)}</span>
+                          </div>
+                        </div>
+                      }
                       description={item.description}
                     />
-                    <div className='list-content' dangerouslySetInnerHTML = {{__html: item.content}} />
+                    <a href={'/article/'+item._id} target="_blank" rel="noopener noreferrer" className="title">
+                      <div className='list-content' dangerouslySetInnerHTML = {{__html: item.content}} />
+                    </a>
                   </List.Item>
                 )}
               />

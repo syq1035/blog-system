@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { withRouter } from "react-router-dom"
-import { Input, Row, Col, Button, message } from 'antd'
+import { Input, Row, Col, Button } from 'antd'
 import Register from './modals/register'
 import Login from './modals/login'
 import UserMenu from '../components/userMenu'
@@ -87,7 +87,6 @@ class Header extends React.Component {
       this.props.history.push('/editor')
     } else {
       this.showLoginModal()
-      message.error('请登录后发表文章')
     }    
   }
 

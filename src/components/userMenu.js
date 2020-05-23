@@ -87,7 +87,8 @@ class userMenu extends React.Component{
     return (
       <Dropdown overlay={menu}>
         <div className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-          <Avatar src={this.state.userInfo.avatar} />
+          {/**<Avatar src={this.state.userInfo.avatar} /> **/}
+          <Avatar src={require('../assets/image/7.jpg')} />
           {
             this.props.match.path !== '/editor' ? 
             <CaretDownOutlined /> : null

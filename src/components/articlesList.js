@@ -3,6 +3,7 @@ import { List, message, Spin, Avatar } from 'antd'
 import { MessageOutlined, LikeOutlined, EyeOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroller'
 import axios from 'axios'
+import momentDate from '../utils/index'
 
 const IconText = ({ icon, text }) => (
   <span>
@@ -24,13 +25,25 @@ class ArticlesList extends React.Component {
   }
 
   componentDidMount() {
+    this.props.onRef(this)
     this.getArticlesList()
+  }
+
+  componentWillReceiveProps() {
+    this.setState({
+      articles: [],
+      loading: false,
+      hasMore: true,
+      pageNum: 1,
+      total: 0
+    })
   }
 
   getArticlesList = () => {
     let pageSize = 8
     let pageNum = this.state.pageNum
-    axios.get('/article/list', { params: {pageSize, pageNum} })
+    let sort = this.props.sort
+    axios.get('/article/list', { params: {pageSize, pageNum, sort} })
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
           let { articles } = this.state;
@@ -84,15 +97,28 @@ class ArticlesList extends React.Component {
                 actions={[
                   <IconText icon={EyeOutlined} text={item.viewCount} key="list-vertical-star-o" />,
                   <IconText icon={LikeOutlined} text={item.likeCount} key="list-vertical-like-o" />,
-                  <IconText icon={MessageOutlined} text={item.commentCount} key="list-vertical-message" />,
+                  <a href={'/article/'+item._id+'#comment'}><IconText icon={MessageOutlined} text={item.commentCount} key="list-vertical-message" /></a>,
                 ]}
                 >
                 <List.Item.Meta
-                  avatar={<Avatar src={item.avatar} />}
-                  title={<a href={'/article/'+item._id} target="_blank" rel="noopener noreferrer">{item.title}</a>}
-                  description={item.description}
+                  avatar={
+                    <a href={'/user/'+item.author._id} target="_blank" rel="noopener noreferrer">
+                      <Avatar src={item.author.avatar} />
+                    </a>
+                  }
+                  title={
+                    <div className="list-title">
+                      <a href={'/article/'+item._id} target="_blank" rel="noopener noreferrer" className="title">{item.title}</a>
+                      <div className="dec">
+                        <span>{item.author.name}</span>
+                        <span className="time">{momentDate(item.create_time)}</span>
+                      </div>
+                    </div>
+                  }
                 />
-                <div className='list-content' dangerouslySetInnerHTML = {{__html: item.content}} />
+                <a href={'/article/'+item._id} target="_blank" rel="noopener noreferrer" className="title">
+                  <div className='list-content' dangerouslySetInnerHTML = {{__html: item.content}} />
+                </a>
               </List.Item>
             )}
           >

@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Avatar, Badge, Input, message, Button } from 'antd'
 import { MessageFilled, LikeFilled, StarFilled } from '@ant-design/icons'
 import CommentList from '../components/comment'
-
+import momentDate from '../utils/index'
 const { TextArea } = Input;
 
 @withRouter
@@ -20,9 +20,8 @@ class ArticleDetail extends React.Component {
       like: false,
       collect: false
     }
+    this.article_id = this.props.location.pathname.substring(9)
   }
-
-  article_id = this.props.location.pathname.substring(9)
 
   componentDidMount() {
     this.getInfo()
@@ -37,6 +36,20 @@ class ArticleDetail extends React.Component {
       }
       this.getLikeStatus(data)
       this.getCollectStatus(data)
+    }
+    // this.scrollToAnchor()
+  }
+
+  scrollToAnchor() {
+    let anchorName = this.props.location.hash;
+    if (anchorName) {
+        anchorName = anchorName.replace("#","")
+        let anchorElement = document.getElementById(anchorName)
+        if(anchorElement) { 
+          anchorElement.scrollIntoView(
+            // {behavior: 'smooth'}
+          );
+        }
     }
   }
 
@@ -70,6 +83,7 @@ class ArticleDetail extends React.Component {
           this.setState({
             comments: res.data.data
           })
+          this.scrollToAnchor()
         }
       })
   }
@@ -202,11 +216,11 @@ class ArticleDetail extends React.Component {
     return (
       <div className="detail-main">
         <div className="author-info">
-          <Avatar src={this.state.user.avater}/>
+          <a href={'/user/'+this.state.user._id}><Avatar src={this.state.user.avater}/></a>
           <div className="author">
-            <a href="/user/" className="name">{this.state.user.name}</a>
+            <a href={'/user/'+this.state.user._id} className="name">{this.state.user.name}</a>
             <div className="time">
-              <span>{this.state.article.create_time}</span>
+              <span>{momentDate(this.state.article.create_time)}</span>
               <span>阅读 {this.state.article.viewCount}</span>
             </div>
           </div>

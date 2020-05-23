@@ -25,11 +25,21 @@ router.post('/new', function(req, res){
 router.get('/list', function(req, res) {
   const pageSize = parseInt(req.query.pageSize)
   const pageNum = parseInt(req.query.pageNum-1)
+  let sort = req.query.sort
+  if(sort === 'recommend') {
+    sort = {content: 1}
+  }
+  if(sort === 'newest') {
+    sort = {create_time: -1}
+  }
+  if(sort === 'hottest') {
+    sort = {viewCount: -1}
+  }
   Article.countDocuments()
     .then(count => {
-      Article.find().skip(pageSize * pageNum).limit(pageSize).populate({ path: 'users' })
+      Article.find().sort(sort).skip(pageSize * pageNum).limit(pageSize)
         .populate([
-          { path: 'author', select: 'name' }
+          { path: 'author', select: 'name avatar' }
         ])
         .then(data => {
           if(data) {
@@ -68,9 +78,22 @@ router.get('/detail', function(req, res) {
 })
 
 router.get('/info', function(req, res) {
-  const author = req.query.author
-  Article.find({author: author})
+  const { author } = req.query
+  Article.find({ author })
+    .populate({ 
+      path: 'author', select: 'avatar name',
+    })
     .then(article => {
+      article = article.map(item => {
+        return {
+          _id: item._id,
+          title: item.title,
+          description: item.description,
+          content: item.content,
+          create_time: item.create_time,
+          author: item.author
+        }
+      })
       responseC(res, 200, 0, '', article)
     })
     .catch(err => {

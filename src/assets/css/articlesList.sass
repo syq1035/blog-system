@@ -1,16 +1,30 @@
 .infinite-container
-    border: 1px solid #e8e8e8;
-    border-radius: 4px;
-    padding: 8px 24px;
-    height: calc(100% - 46px);
-    overflow: auto;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 8px 24px;
+  height: calc(100% - 46px);
+  overflow: auto;
 
-    .list-content
-      height: 56px;
-      width: 90%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+  a
+    color: #000;
+
+  .list-title 
+    .title
+      font-size: 1rem;
+
+    .dec
+      color: rgba(0, 0, 0, 0.45);
+   
+    .time
+      padding-left: 1rem;
+
+  .list-content
+    height: 56px;
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: rgba(0, 0, 0, 0.65);
 
 .loading-container
   position: absolute;

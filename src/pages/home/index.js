@@ -7,14 +7,21 @@ class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      sort: 'all'
+      sort: 'recommend'
     }
+    this.exportRef = ''
   }
 
   handleMenu = ({key}) => {
     this.setState({
       sort: key
+    },() => {
+      this.exportRef.getArticlesList()
     })
+  }
+
+  onRef = (ref) => {
+    this.exportRef = ref
   }
 
   render () {
@@ -28,8 +35,8 @@ class Home extends React.Component {
               selectedKeys={[this.state.sort]}
               onClick={this.handleMenu}
             >
-              <Menu.Item key="all">
-                <span>全部</span>
+              <Menu.Item key="recommend">
+                <span>推荐</span>
               </Menu.Item>
               <Menu.Item key="newest">
                 <span>最新</span>
@@ -39,7 +46,7 @@ class Home extends React.Component {
               </Menu.Item>
             </Menu>
           </div>
-          <ArticlesList />
+          <ArticlesList onRef={this.onRef} sort={this.state.sort} />
         </div>
         
       </div>

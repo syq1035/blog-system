@@ -63,7 +63,7 @@ router.get('/user', function(req, res) {
   Like.find({ user })
     .populate({ 
       path: 'article', 
-      populate: { path: 'author', select: 'avatar' },
+      populate: { path: 'author', select: 'avatar name' },
     })
     .then(data => {
       if(data){
@@ -74,8 +74,7 @@ router.get('/user', function(req, res) {
             description: item.article.description,
             content: item.article.content,
             create_time: item.article.create_time,
-            user_id: item.article.author._id,
-            user_avatar: item.article.author.avatar
+            author: item.article.author
           }
         })
         responseC(res, 200, 0, '获取用户点赞列表成功', data)
