@@ -1,6 +1,6 @@
 import React from 'react'
 import { List, message, Spin, Avatar } from 'antd'
-import { MessageOutlined, LikeOutlined, EyeOutlined } from '@ant-design/icons'
+import { MessageOutlined, LikeOutlined, LikeTwoTone, EyeOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroller'
 import axios from 'axios'
 import momentDate from '../utils/index'
@@ -16,6 +16,9 @@ class ArticlesList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      likeCount: {},
+      likeArticle: [],
+      commentCount: {},
       articles: [],
       loading: false,
       hasMore: true,
@@ -27,6 +30,8 @@ class ArticlesList extends React.Component {
   componentDidMount() {
     this.props.onRef(this)
     this.getArticlesList()
+    this.getLikeCount()
+    this.getCommentCount()
   }
 
   componentWillReceiveProps() {
@@ -77,6 +82,76 @@ class ArticlesList extends React.Component {
     })
   }
 
+  getLikeCount = () => {
+    axios.get('/like/allCount')
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          let likeCount = {}
+          res.data.data.likeCount.map(item => {
+            likeCount[item._id] = item.likeCount
+            return item
+          })
+          this.setState({
+            likeCount: likeCount,
+            likeArticle: [...res.data.data.likeArticle]
+          })
+        }
+      })  
+  }
+
+  getCommentCount = () => {
+    axios.get('/comment/allCount')
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          let commentCount = {}
+          res.data.data.map(item => {
+            commentCount[item._id] = item.commentCount
+            return item
+          })
+          this.setState({
+            commentCount: commentCount
+          })
+        }
+      })  
+  }
+
+  handleLike (id){
+    console.log('ccc')
+    if(window.sessionStorage.userInfo) {
+      const userInfo = JSON.parse(window.sessionStorage.userInfo)
+      const like = {
+        article: id,
+        user: userInfo._id
+      }
+      console.log(this.state.likeArticle)
+      if(this.state.likeArticle.includes(id)) {
+        axios.post('/like/del', like)
+        .then(res => {
+          let count = this.state.likeCount[id] - 1
+          let likeArticle = this.state.likeArticle
+          likeArticle.splice(likeArticle.indexOf(id), 1);
+          this.setState({
+            likeArticle: likeArticle,
+            likeCount: {...this.state.likeCount, [id]: count}
+          })
+        })
+      } else {
+        axios.post('/like/new', like)
+        .then(res => {
+          let count = (this.state.likeCount[id] ||0) + 1
+          let likeArticle = this.state.likeArticle
+          likeArticle.push(id);
+          this.setState({
+            likeArticle: likeArticle,
+            likeCount: {...this.state.likeCount, [id]: count}
+          })
+        })
+      }
+    } else {
+      message.error('请先登录~')
+    }
+  }
+
   render() {
     return (
       <div className="infinite-container">
@@ -96,8 +171,12 @@ class ArticlesList extends React.Component {
                 key={item._id}
                 actions={[
                   <IconText icon={EyeOutlined} text={item.viewCount} key="list-vertical-star-o" />,
-                  <IconText icon={LikeOutlined} text={item.likeCount} key="list-vertical-like-o" />,
-                  <a href={'/article/'+item._id+'#comment'}><IconText icon={MessageOutlined} text={item.commentCount} key="list-vertical-message" /></a>,
+                  <a onClick={this.handleLike.bind(this, item._id)}>
+                    <IconText icon={this.state.likeArticle.includes(item._id)? LikeTwoTone : LikeOutlined} text={this.state.likeCount[item._id] || 0} key="list-vertical-like-o" />
+                  </a>,
+                  <a href={'/article/'+item._id+'#comment'}>
+                    <IconText icon={MessageOutlined} text={this.state.commentCount[item._id] || 0} key="list-vertical-message" />
+                  </a>,
                 ]}
                 >
                 <List.Item.Meta

@@ -85,4 +85,34 @@ router.get('/user', function(req, res) {
     })
 })
 
+router.get('/allCount', function(req, res) {
+  Like.aggregate([
+    {
+      $group:{
+        _id: '$article',//分组条件
+        likeCount: { $sum: 1 }//类似于.count 但这是是管道函数　　所以还需要加上$sum关键词
+      },
+    }
+  ]).then(likeCount => {
+    if (req.session.userInfo) {
+      Like.find({user: req.session.userInfo._id})
+        .then((likeArticle) => {
+          console.log(req.session.userInfo, likeArticle)
+          if(likeArticle){
+            likeArticle = likeArticle.map(item => {
+              return item.article
+            })
+            responseC(res, 200, 0, '文章点赞数量', {likeCount: likeCount, likeArticle: likeArticle})
+          }
+        })
+    } 
+    else{
+      responseC(res, 200, 0, '文章点赞数量', {likeCount: likeCount})
+    }
+  })
+  .catch(err => {
+    responseC(res)
+  })
+})
+
 module.exports = router;

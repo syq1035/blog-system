@@ -82,8 +82,10 @@ class ArticleDetail extends React.Component {
         if (res.status === 200 && res.data.code === 0) {
           this.setState({
             comments: res.data.data
+          }, () => {
+            this.scrollToAnchor()
           })
-          this.scrollToAnchor()
+          
         }
       })
   }

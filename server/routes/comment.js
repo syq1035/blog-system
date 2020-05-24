@@ -43,5 +43,23 @@ async function getCommentsByArticleId(req, res) {
   })
   responseC(res, 200, 0, '获取评论列表成功', comments)
 }
+
+router.get('/allCount', function(req, res) {
+  Comment.aggregate([
+    {
+      $group:{
+        _id: '$article',
+        commentCount: { $sum: 1 }
+      },
+    }
+  ]).then(data => {
+    if(data){
+      responseC(res, 200, 0, '文章评论数量', data)
+    }
+  })
+  .catch(err => {
+    responseC(res)
+  })
+})
     
 module.exports = router;
