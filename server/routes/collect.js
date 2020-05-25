@@ -61,6 +61,7 @@ router.get('/user', function(req, res) {
             title: item.article.title,
             description: item.article.description,
             content: item.article.content,
+            viewCount:item.viewCount,
             create_time: item.article.create_time,
             author: item.article.author
           }

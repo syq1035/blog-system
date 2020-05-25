@@ -90,11 +90,12 @@ router.get('/info', function(req, res) {
           title: item.title,
           description: item.description,
           content: item.content,
+          viewCount:item.viewCount,
           create_time: item.create_time,
           author: item.author
         }
       })
-      responseC(res, 200, 0, '', article)
+      responseC(res, 200, 0, '用户文章列表', article)
     })
     .catch(err => {
       responseC(res)

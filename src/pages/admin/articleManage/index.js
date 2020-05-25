@@ -1,11 +1,14 @@
 import React from 'react'
 import axios from 'axios'
 import { Table, Button } from 'antd'
+import momentDate from '../../../utils/index'
 
 class ArticleManage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      likeCount: {},
+      commentCount: {},
       articles: [],
       pageTotal: 0,
       pageNum: 1,
@@ -43,11 +46,21 @@ class ArticleManage extends React.Component {
       title: '点赞数',
       dataIndex: 'likeCount',
       key: 'likeCount',
+      render: (text, record) => (
+        <span>
+          {this.state.likeCount[record._id] || 0}
+        </span>
+      )
     },
     {
       title: '评论数',
       dataIndex: 'commentCount',
       key: 'commentCount',
+      render: (text, record) => (
+        <span>
+          {this.state.commentCount[record._id] || 0}
+        </span>
+      )
     },
     {
       title: '发布时间',
@@ -55,7 +68,7 @@ class ArticleManage extends React.Component {
       key: 'create_time',
       render: (text) => (
         <span>
-          {text.toString().substring(0, 10)}
+          {momentDate(text)}
         </span>
       )
     },
@@ -73,10 +86,11 @@ class ArticleManage extends React.Component {
 
   componentDidMount() {
     this.getArticlesList()
+    this.getLikeCount()
+    this.getCommentCount()
   }
 
   changePage = (page) => {
-    
     this.setState({
       pageNum: page
     }, () => {
@@ -96,6 +110,38 @@ class ArticleManage extends React.Component {
           })
         }
       })
+  }
+
+  getLikeCount = () => {
+    axios.get('/like/allCount')
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          let likeCount = {}
+          res.data.data.likeCount.map(item => {
+            likeCount[item._id] = item.likeCount
+            return item
+          })
+          this.setState({
+            likeCount: likeCount,
+          })
+        }
+      })  
+  }
+
+  getCommentCount = () => {
+    axios.get('/comment/allCount')
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          let commentCount = {}
+          res.data.data.map(item => {
+            commentCount[item._id] = item.commentCount
+            return item
+          })
+          this.setState({
+            commentCount: commentCount
+          })
+        }
+      })  
   }
 
   delete = (_id) => {

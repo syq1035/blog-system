@@ -116,14 +116,12 @@ class ArticlesList extends React.Component {
   }
 
   handleLike (id){
-    console.log('ccc')
     if(window.sessionStorage.userInfo) {
       const userInfo = JSON.parse(window.sessionStorage.userInfo)
       const like = {
         article: id,
         user: userInfo._id
       }
-      console.log(this.state.likeArticle)
       if(this.state.likeArticle.includes(id)) {
         axios.post('/like/del', like)
         .then(res => {
@@ -178,7 +176,7 @@ class ArticlesList extends React.Component {
                     <IconText icon={MessageOutlined} text={this.state.commentCount[item._id] || 0} key="list-vertical-message" />
                   </a>,
                 ]}
-                >
+              >
                 <List.Item.Meta
                   avatar={
                     <a href={'/user/'+item.author._id} target="_blank" rel="noopener noreferrer">

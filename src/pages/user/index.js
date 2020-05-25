@@ -1,6 +1,6 @@
 import React from 'react'
-import { Avatar, Menu, List, Button } from 'antd'
-import { MessageOutlined, LikeOutlined, EyeOutlined } from '@ant-design/icons'
+import { Avatar, Menu, List, Button, message } from 'antd'
+import { MessageOutlined, LikeOutlined, LikeTwoTone, EyeOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import { withRouter } from "react-router-dom"
 import Header from '../../components/header'
@@ -19,16 +19,23 @@ class User extends React.Component {
     super(props)
     this.state = {
       user: {},
+      likeCount: {},
+      likeArticle: [],
+      commentCount: {},
       articles: [],
       nav: 'article'
     }
+    this.user_id = this.props.location.pathname.substring(6)
+    if (window.sessionStorage.userInfo) {
+      this.localUser = JSON.parse(window.sessionStorage.userInfo)
+    }
   }
-
-  user_id = this.props.location.pathname.substring(6)
 
   componentDidMount() {
     this.getUserInfo()
     this.getArticleInfo()
+    this.getLikeCount()
+    this.getCommentCount()
   }
 
   getUserInfo() {
@@ -47,7 +54,7 @@ class User extends React.Component {
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
           this.setState({
-            articles: res.data.data
+            articles: [...res.data.data]
           })
         }
       })
@@ -58,7 +65,7 @@ class User extends React.Component {
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
           this.setState({
-            articles: res.data.data
+            articles: [...res.data.data]
           })
         }
       })
@@ -92,6 +99,74 @@ class User extends React.Component {
     }
   }
 
+  getLikeCount = () => {
+    axios.get('/like/allCount')
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          let likeCount = {}
+          res.data.data.likeCount.map(item => {
+            likeCount[item._id] = item.likeCount
+            return item
+          })
+          this.setState({
+            likeCount: likeCount,
+            likeArticle: [...res.data.data.likeArticle]
+          })
+        }
+      })  
+  }
+
+  getCommentCount = () => {
+    axios.get('/comment/allCount')
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          let commentCount = {}
+          res.data.data.map(item => {
+            commentCount[item._id] = item.commentCount
+            return item
+          })
+          this.setState({
+            commentCount: commentCount
+          })
+        }
+      })  
+  }
+
+  handleLike (id){
+    if(window.sessionStorage.userInfo) {
+      const userInfo = JSON.parse(window.sessionStorage.userInfo)
+      const like = {
+        article: id,
+        user: userInfo._id
+      }
+      if(this.state.likeArticle.includes(id)) {
+        axios.post('/like/del', like)
+        .then(res => {
+          let count = this.state.likeCount[id] - 1
+          let likeArticle = this.state.likeArticle
+          likeArticle.splice(likeArticle.indexOf(id), 1);
+          this.setState({
+            likeArticle: likeArticle,
+            likeCount: {...this.state.likeCount, [id]: count}
+          })
+        })
+      } else {
+        axios.post('/like/new', like)
+        .then(res => {
+          let count = (this.state.likeCount[id] ||0) + 1
+          let likeArticle = this.state.likeArticle
+          likeArticle.push(id);
+          this.setState({
+            likeArticle: likeArticle,
+            likeCount: {...this.state.likeCount, [id]: count}
+          })
+        })
+      }
+    } else {
+      message.error('请先登录~')
+    }
+  }
+
   render() {
     return (
       <div className="home">
@@ -104,7 +179,14 @@ class User extends React.Component {
                 <span className="name">{this.state.user.name}</span>
               </div>
             </div>
-            <Button type="primary">关注</Button>
+            <div className="follow">
+              {
+                this.user_id === this.localUser._id ?
+                <a href='/setting'>修改个人信息</a>
+                :
+                <Button type="primary">关注</Button>
+              }
+            </div>
           </div>
           <div className="detail">
             <div className="list-header">
@@ -137,10 +219,14 @@ class User extends React.Component {
                     key={item._id}
                     actions={[
                       <IconText icon={EyeOutlined} text={item.viewCount} key="list-vertical-star-o" />,
-                      <IconText icon={LikeOutlined} text={item.likeCount} key="list-vertical-like-o" />,
-                      <IconText icon={MessageOutlined} text={item.commentCount} key="list-vertical-message" />,
+                      <a onClick={this.handleLike.bind(this, item._id)}>
+                        <IconText icon={this.state.likeArticle.includes(item._id)? LikeTwoTone : LikeOutlined} text={this.state.likeCount[item._id] || 0} key="list-vertical-like-o" />
+                      </a>,
+                      <a href={'/article/'+item._id+'#comment'}>
+                        <IconText icon={MessageOutlined} text={this.state.commentCount[item._id] || 0} key="list-vertical-message" />
+                      </a>,
                     ]}
-                    >
+                  >
                     <List.Item.Meta
                       avatar={
                         <a href={'/user/'+item.author._id}>

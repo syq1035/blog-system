@@ -61,5 +61,38 @@ router.get('/allCount', function(req, res) {
     responseC(res)
   })
 })
-    
+
+router.get('/list', function(req, res) {
+  const pageSize = parseInt(req.query.pageSize)
+  const pageNum = parseInt(req.query.pageNum-1)
+  Comment.count()
+    .then(count => {
+      Comment.find().skip(pageSize * pageNum).limit(pageSize)
+        .populate([
+          { path: 'user', select: 'name' },
+          { path: 'to', select: 'name' },
+          { path: 'article', select: 'title' }
+        ])
+        .then(data => {
+          if(data) {
+            responseC(res, 200, 0, '', {comments: data, total: count})
+          }
+        })
+    })
+    .catch(err => {
+      responseC(res)
+    })
+})
+
+router.delete('/delete', function(req, res){
+  const _id = req.query._id
+  Comment.remove({_id})
+    .then(data => {
+      responseC(res, 200, 0, '删除成功')
+    })
+    .catch(err => {
+      responseC(res)
+    })
+})
+
 module.exports = router;

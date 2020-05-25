@@ -28,26 +28,37 @@ class Header extends React.Component {
   }
 
   getUserInfo() {
-    if (window.sessionStorage.userInfo) {
-      this.setState({
-        userInfo: JSON.parse(window.sessionStorage.userInfo)
-      })
-    }
+    axios.get('/user/status')
+    .then(res => {
+      if(res.status === 200 && res.data.code === 0){
+        this.setState({
+          userInfo: JSON.parse(window.sessionStorage.userInfo)
+        })
+      }else {
+        window.sessionStorage.userInfo = '';
+      }
+    })
+    // if (window.sessionStorage.userInfo) {
+    //   this.setState({
+    //     userInfo: JSON.parse(window.sessionStorage.userInfo)
+    //   })
+    // }
   }
 
   signOut() {
     this.setState({
       userInfo: ''
     })
-    axios.post('/user/signout')
-      .then(res => {
-        if(res.status === 200 && res.data.code === 0){
-          window.sessionStorage.userInfo = '';
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    // axios.post('/user/signout')
+    //   .then(res => {
+    //     if(res.status === 200 && res.data.code === 0){
+    //       window.sessionStorage.userInfo = '';
+    //       this.props.history.push('/home')
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //   })
   }
 
   showRegisterModal = () => {

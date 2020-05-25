@@ -16,17 +16,26 @@ router.post('/new', function(req, res){
     .catch(err => {
       return responseC(res)
     })
+  // Like.find({ article, user }).then(d=>{
+  //   if(!d){
+  //     like.save()
+  //     .then(data => {
+  //       responseC(res, 200, 0, '点赞成功') 
+  //     })
+  //   }
+  // })
+  // .catch(err => {
+  //   return responseC(res)
+  // })
 })
 
 router.post('/del', function(req, res){
   const { article, user } = req.body
-  const like = new Like({
-    article,
-    user
-  })
-  Like.deleteOne(like)
+  Like.deleteOne({ article, user })
     .then(data => {
-      responseC(res, 200, 0, '取消点赞') 
+      if(data) {
+        responseC(res, 200, 0, '取消点赞') 
+      }
     })
     .catch(err => {
       return responseC(res)
@@ -73,6 +82,7 @@ router.get('/user', function(req, res) {
             title: item.article.title,
             description: item.article.description,
             content: item.article.content,
+            viewCount:item.viewCount,
             create_time: item.article.create_time,
             author: item.article.author
           }
@@ -97,17 +107,16 @@ router.get('/allCount', function(req, res) {
     if (req.session.userInfo) {
       Like.find({user: req.session.userInfo._id})
         .then((likeArticle) => {
-          console.log(req.session.userInfo, likeArticle)
           if(likeArticle){
             likeArticle = likeArticle.map(item => {
               return item.article
             })
-            responseC(res, 200, 0, '文章点赞数量', {likeCount: likeCount, likeArticle: likeArticle})
           }
+          responseC(res, 200, 0, '文章点赞数量', {likeCount: likeCount, likeArticle: likeArticle})
         })
     } 
     else{
-      responseC(res, 200, 0, '文章点赞数量', {likeCount: likeCount})
+      responseC(res, 200, 0, '文章点赞数量', {likeCount: likeCount, likeArticle: []})
     }
   })
   .catch(err => {

@@ -55,6 +55,7 @@ class Login extends React.Component {
           })
           if(res.data.data.type) {
             this.props.getUserInfo()
+            this.props.history.push('/user/'+res.data.data._id)
           } else {
             this.props.history.push('/admin')
           }

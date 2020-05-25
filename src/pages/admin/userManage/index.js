@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
-import { Table, Button } from 'antd'
+import { Table, Button, message } from 'antd'
+import momentDate from '../../../utils/index'
 
 class UserManage extends React.Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class UserManage extends React.Component {
       key: 'create_time',
       render: (text) => (
         <span>
-          {text.toString().substring(0, 10)}
+          {momentDate(text)}
         </span>
       )
     },
@@ -89,6 +90,7 @@ class UserManage extends React.Component {
     axios.delete('/user/delete', { params: {_id} })
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
+          message.success('注销成功')
           this.getUserList()
         }
       })
