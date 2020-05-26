@@ -181,7 +181,7 @@ class User extends React.Component {
             </div>
             <div className="follow">
               {
-                this.user_id === this.localUser._id ?
+                this.localUser && this.user_id === this.localUser._id ?
                 <a href='/setting'>修改个人信息</a>
                 :
                 <Button type="primary">关注</Button>

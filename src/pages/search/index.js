@@ -16,10 +16,9 @@ class Search extends React.Component {
 
   componentDidMount() {
     this.getArticleList(this.search)
-
   }
+
   getArticleList = (obj) => {
-    console.log(obj)
     axios.get('/article/search', {params: obj})
       .then(res => {
         if (res.status === 200 && res.data.code === 0) {
